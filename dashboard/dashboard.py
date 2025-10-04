@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 
 # ========= CONFIG =========
-API_URL = "https://oncerto.onrender.com"  # URL do backend local (no Render vai mudar)
+API_URL = "https://oncerto.onrender.com/comercios"  # URL do backend local (no Render vai mudar)
 
 # ========= FRONTEND =========
 st.set_page_config(page_title="ONCerto - Buscador de Negócios", page_icon="📊", layout="wide")
