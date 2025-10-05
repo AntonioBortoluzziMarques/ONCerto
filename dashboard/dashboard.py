@@ -2,16 +2,16 @@ import streamlit as st
 import requests
 import pandas as pd
 
-# ========= CONFIG =========
-API_URL = "https://oncerto.onrender.com/comercios"  # URL do backend local (no Render vai mudar)
+# configuração
+API_URL = "https://oncerto.onrender.com/comercios"
 
-# ========= FRONTEND =========
+# estilização básica (alterar URGENTE)
 st.set_page_config(page_title="ONCerto - Buscador de Negócios", page_icon="📊", layout="wide")
 
 st.title("📊 ONCerto - Buscador de Negócios")
 st.markdown("Descubra os **comércios locais** e veja se estão atualizados no Google Meu Negócio.")
 
-# Entrada de cidade
+# input da cidade
 cidade = st.text_input("Digite a cidade que deseja buscar:", placeholder="Ex: Chapecó, SC")
 
 if st.button("🔍 Buscar"):
@@ -29,7 +29,7 @@ if st.button("🔍 Buscar"):
                     
                     st.dataframe(df, use_container_width=True)
 
-                    # Botão para baixar Excel
+                    # botão pra salvar planilha (backend não está funcionando)
                     excel = df.to_excel(index=False, engine="openpyxl")
                     st.download_button(
                         "📥 Baixar resultados em Excel",

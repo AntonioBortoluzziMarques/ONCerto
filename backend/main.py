@@ -2,14 +2,20 @@ from fastapi import FastAPI, Query
 import requests
 import pandas as pd
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
-# ========= CONFIG =========
-API_KEY = "2b03e116913828d03c1d36ae2b48bf510b54721bbfb04ec54ddc5e253a7da779"  # substitua pela sua chave da SerpAPI
+# configuração
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 CATEGORIAS = ["lojas", "restaurantes", "mercados", "farmácias", "cafés"]
+
+if not API_KEY:
+    raise ValueError("API_KEY não encontrada. Configure no arquivo .env")
 
 app = FastAPI()
 
-# ========= FUNÇÕES =========
+# funções de funcionamento
 def buscar_comercios(query, local="Chapecó, SC", limite=20):
     """Busca comércios no Google Maps via SerpAPI"""
     url = "https://serpapi.com/search.json"
@@ -31,7 +37,6 @@ def analisar_comercio(comercio):
     site = comercio.get("website", "")
     status = comercio.get("status", "DESCONHECIDO")
 
-    # Verifica Instagram no site
     instagram = "instagram.com" in site.lower() if site else False
 
     return {
@@ -42,7 +47,7 @@ def analisar_comercio(comercio):
         "Google Meu Negócio atualizado?": "✅" if status.lower() == "aberto" else "❌"
     }
 
-# ========= ROTAS =========
+# rotas
 @app.get("/")
 def home():
     return {"mensagem": "API de Comércios Locais - Use /comercios?cidade=Chapecó, SC"}
@@ -57,7 +62,7 @@ def get_comercios(cidade: str = Query(..., description="Cidade para buscar comé
             info["Categoria"] = categoria
             todos_comercios.append(info)
 
-    # Criar DataFrame (para salvar planilha se quiser no futuro)
+    # salvar planilha (atualmente com erro). O erro não interfere no funcionamento
     df = pd.DataFrame(todos_comercios)
     arquivo = f"comercios_{cidade.replace(',', '').replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.xlsx"
     df.to_excel(arquivo, index=False)
